@@ -1,38 +1,25 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мини робот</title>
-  <!-- Подключение стилей -->
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Милый Робот</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Контейнер робота -->
-  <div id="robot">
-    <!-- Лицо -->
-    <img id="face" src="https://i.pinimg.com/originals/4c/10/2e/4c102e2fdd68d3f2ad515a7ef44a9c8b.png" alt="лицо робота">
-
-    <!-- Глаза -->
+<div id="robot">
+  <div id="face">
     <div class="eye left"></div>
     <div class="eye right"></div>
-
-    <!-- Руки -->
-    <div class="arm left"></div>
-    <div class="arm right"></div>
-
-    <!-- Картонка для текста -->
-    <div id="card"></div>
-
-    <!-- Сцена -->
-    <img id="scene" src="" alt="сцена">
+    <div class="smile"></div>
   </div>
+  <div class="arm left"></div>
+  <div class="arm right"></div>
+  <div id="card">Привет! Я твой милый робот 🤖</div>
+  <button id="speakBtn">Сказать что-то</button>
+</div>
 
-  <!-- Кнопка микрофона -->
-  <button id="listen">🎤 Говорить</button>
-
-  <!-- Подключение скрипта -->
-  <script src="script.js" defer></script>
+<script src="script.js"></script>
 </body>
 </html>
