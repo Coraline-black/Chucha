@@ -1,4 +1,3 @@
-/* Общие стили */
 body {
   background: #ffeef2;
   font-family: 'Arial', sans-serif;
@@ -10,26 +9,23 @@ body {
   padding-top: 50px;
 }
 
-/* Контейнер робота */
 #robot {
   width: 250px;
   text-align: center;
   position: relative;
 }
 
-/* Лицо с щёчками */
 #face {
   width: 180px;
   height: 180px;
   background: #ffd6e0;
-  border-radius: 50% 50% 60% 60%; /* мягкая форма, не просто круг */
+  border-radius: 50% 50% 60% 60%;
   margin: 0 auto;
   position: relative;
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
   transition: all 0.3s;
 }
 
-/* Щёчки */
 .cheek {
   width: 40px;
   height: 20px;
@@ -41,7 +37,6 @@ body {
 .cheek.left { left: 25px; }
 .cheek.right { right: 25px; }
 
-/* Глаза */
 .eye {
   width: 35px;
   height: 35px;
@@ -55,7 +50,6 @@ body {
 .eye.left { left: 40px; }
 .eye.right { right: 40px; }
 
-/* Блеск глаз */
 .eye::after {
   content: "";
   width: 12px;
@@ -67,7 +61,6 @@ body {
   left: 5px;
 }
 
-/* Улыбка */
 .smile {
   width: 90px;
   height: 50px;
@@ -80,7 +73,6 @@ body {
   transition: all 0.3s;
 }
 
-/* Руки */
 .arm {
   width: 20px;
   height: 70px;
@@ -94,7 +86,6 @@ body {
 .arm.left { left: -20px; }
 .arm.right { right: -20px; }
 
-/* Картонка */
 #card {
   margin-top: 190px;
   padding: 10px 15px;
@@ -106,22 +97,27 @@ body {
   transition: all 0.3s;
 }
 
-/* Кнопка */
-#speakBtn {
+#questionInput {
   margin-top: 15px;
+  padding: 6px 10px;
+  width: 80%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#askBtn {
+  margin-top: 10px;
   padding: 8px 12px;
   background: #ffb6c1;
   border: none;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
 }
-#speakBtn:hover {
+#askBtn:hover {
   background: #ff99aa;
 }
 
-/* Эмоции лица */
 #face.happy .smile { border-bottom-color: #333; transform: translateX(-50%) rotate(0deg); }
 #face.sad .smile { border-bottom-color: #555; transform: translateX(-50%) rotate(180deg); }
-#face.surprised .smile { width: 25px; height: 25px; border-radius: 50%; border-bottom: none; border: 4px solid #333; } 
+#face.surprised .smile { width: 25px; height: 25px; border-radius: 50%; border-bottom: none; border: 4px solid #333; }
