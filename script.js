@@ -1,4 +1,4 @@
-// === ЭЛЕМЕНТЫ ===
+// === Элементы ===
 const card = document.getElementById("card");
 const micBtn = document.getElementById("micBtn");
 const eyes = document.querySelectorAll(".eye");
@@ -6,15 +6,13 @@ const face = document.getElementById("face");
 const leftArm = document.querySelector(".arm.left");
 const rightArm = document.querySelector(".arm.right");
 
-// === МОРГАНИЕ ГЛАЗ ===
+// === Моргание глаз ===
 setInterval(() => {
   eyes.forEach(e => e.style.height = "6px");
-  setTimeout(() => {
-    eyes.forEach(e => e.style.height = "44px");
-  }, 180);
+  setTimeout(() => eyes.forEach(e => e.style.height = "44px"), 180);
 }, 2500);
 
-// === ЖЕСТ РУКАМИ ===
+// === Жесты рук ===
 function gesture() {
   rightArm.style.transform = "rotate(25deg)";
   leftArm.style.transform = "rotate(-15deg)";
@@ -24,7 +22,7 @@ function gesture() {
   }, 500);
 }
 
-// === КИВОК / ОТРИЦАНИЕ ГОЛОВОЙ ===
+// === Кивок / отрицание головой ===
 function nodHead(isYes) {
   if (isYes) {
     face.style.transform = "rotate(15deg)";
@@ -37,23 +35,23 @@ function nodHead(isYes) {
   }
 }
 
-// === ПОКАЗ НА КАРТОНКЕ ===
+// === Табличка + жесты ===
 function respond(text) {
   card.textContent = text;
   gesture();
 }
 
-// === ПРОВЕРКА, НУЖНО ЛИ ОТВЕЧАТЬ ===
+// === Проверка, нужно ли отвечать ===
 function shouldRespond(text) {
   const triggers = ["покажи", "сколько", "вычисли", "пример", "реши"];
   return triggers.some(word => text.includes(word));
 }
 
-// === НАСТОЯЩИЙ ИИ ===
+// === Настоящий ИИ через OpenAI ===
 async function askAI(message) {
-  const apiKey = "ТВОЙ_API_KEY_ЗДЕСЬ"; // вставь свой ключ OpenAI
+  const apiKey = "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";
   try {
-    // Сразу показываем "думаю" на табличке
+    // Сразу показываем "думаю"
     respond("💭 Думаю…");
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -65,7 +63,7 @@ async function askAI(message) {
       body: JSON.stringify({
         model: "gpt-4",
         messages: [
-          { role: "system", content: "Ты дружелюбный робот-друг. Отвечай через табличку и жесты. Никогда не говори вслух." },
+          { role: "system", content: "Ты дружелюбный робот-друг. Отвечай через табличку и жесты, не говори вслух." },
           { role: "user", content: message }
         ]
       })
@@ -78,7 +76,7 @@ async function askAI(message) {
   }
 }
 
-// === ГОЛОС ===
+// === Голос ===
 micBtn.onclick = () => {
   if (!("webkitSpeechRecognition" in window)) {
     respond("Голос не поддерживается 😢");
@@ -88,7 +86,6 @@ micBtn.onclick = () => {
   const recognition = new webkitSpeechRecognition();
   recognition.lang = "ru-RU";
   recognition.start();
-
   respond("🎧 Я слушаю…");
 
   recognition.onresult = async (event) => {
@@ -96,7 +93,7 @@ micBtn.onclick = () => {
 
     // Если не нужно отвечать
     if (!shouldRespond(text)) {
-      nodHead(false); // качает головой отрицательно
+      nodHead(false);
       card.textContent = "💭 Я пока молчу…";
       return;
     }
@@ -106,8 +103,6 @@ micBtn.onclick = () => {
 
     // Получаем ответ от ИИ
     const answer = await askAI(text);
-
-    // Показываем на табличке
     setTimeout(() => respond(answer), 400);
   };
 };
