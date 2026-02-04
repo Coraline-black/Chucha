@@ -2,8 +2,9 @@ body {
   background: radial-gradient(circle at top, #2a0f1f, #07030a);
   font-family: Arial, sans-serif;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   height: 100vh;
   margin: 0;
   padding-top: 40px;
@@ -27,11 +28,11 @@ body {
   box-shadow: 0 0 30px rgba(255,160,200,0.25);
 }
 
-/* Глаза — СВЕТЛО-РОЗОВЫЕ */
+/* Глаза — светло-розовые */
 .eye {
   width: 44px;
   height: 44px;
-  background: radial-gradient(circle, #ffd6eb, #ff8fc6);
+  background: radial-gradient(circle, #ffd6eb, #ffb6c1);
   border-radius: 50%;
   position: absolute;
   top: 55px;
@@ -53,11 +54,11 @@ body {
   left: 7px;
 }
 
-/* Улыбка — РОЗОВАЯ */
+/* Улыбка — светло-розовая */
 .smile {
   width: 90px;
   height: 45px;
-  border-bottom: 4px solid #ff9acb;
+  border-bottom: 4px solid #ffc0cb;
   border-radius: 0 0 60px 60px;
   position: absolute;
   bottom: 35px;
@@ -88,6 +89,7 @@ body {
   box-shadow: 0 0 15px rgba(255,150,200,0.25);
   min-height: 48px;
   font-weight: bold;
+  text-align: center;
 }
 
 /* Кнопка */
