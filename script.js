@@ -1,48 +1,53 @@
-const face = document.getElementById("face");
 const card = document.getElementById("card");
-const rightArm = document.querySelector('.arm.right');
-const leftArm = document.querySelector('.arm.left');
-const eyes = document.querySelectorAll('.eye');
-const input = document.getElementById("questionInput");
-const askBtn = document.getElementById("askBtn");
+const micBtn = document.getElementById("micBtn");
+const eyes = document.querySelectorAll(".eye");
+const leftArm = document.querySelector(".arm.left");
+const rightArm = document.querySelector(".arm.right");
 
-// Одновременное моргание глаз
+/* Моргание ОБОИХ глаз */
 setInterval(() => {
-  eyes.forEach(e => e.style.height = '5px');
-  setTimeout(() => eyes.forEach(e => e.style.height = '35px'), 200);
-}, 2000);
+  eyes.forEach(e => e.style.height = "6px");
+  setTimeout(() => {
+    eyes.forEach(e => e.style.height = "42px");
+  }, 180);
+}, 2500);
 
-// Словарь вопросов и ответов
+/* Ответы */
 const answers = {
-  "привет": {text: "Привет! 😊", emotion: "happy"},
-  "как дела": {text: "У меня всё отлично! 🤗", emotion: "happy"},
-  "ты умеешь считать": {text: "Конечно! 2+2=4 😎", emotion: "happy"},
-  "как погода": {text: "Я не знаю, но надеюсь, что солнечно! ☀️", emotion: "happy"},
-  "ты грустный": {text: "Немного 😢", emotion: "sad"},
-  "что ты умеешь": {text: "Я могу отвечать на простые вопросы! 😄", emotion: "happy"},
-  "какой твой любимый цвет": {text: "Мой любимый цвет — розовый! 💖", emotion: "happy"},
+  "привет": "Привет! Я рад тебя слышать 😊",
+  "как дела": "У меня всё отлично 💙",
+  "что ты умеешь": "Я слушаю тебя и отвечаю жестами ✨",
+  "сколько тебе лет": "Я ещё очень молодой робот 🤖",
+  "ты милый": "Спасибо! Мне приятно 🥹",
+  "пока": "Пока! Возвращайся 💫"
 };
 
-// Функция показа текста и движения рук
-function showCard(text, emotion="happy") {
+function respond(text) {
   card.textContent = text;
-  face.className = emotion;
 
-  rightArm.style.transform = 'rotate(20deg)';
-  leftArm.style.transform = 'rotate(-15deg)';
+  rightArm.style.transform = "rotate(25deg)";
+  leftArm.style.transform = "rotate(-15deg)";
   setTimeout(() => {
-    rightArm.style.transform = 'rotate(0deg)';
-    leftArm.style.transform = 'rotate(0deg)';
+    rightArm.style.transform = "rotate(0deg)";
+    leftArm.style.transform = "rotate(0deg)";
   }, 500);
 }
 
-// Обработка нажатия кнопки
-askBtn.addEventListener("click", () => {
-  const question = input.value.toLowerCase();
-  if(answers[question]){
-    showCard(answers[question].text, answers[question].emotion);
-  } else {
-    showCard("Извини, я не знаю ответа 😅", "surprised");
+/* 🎤 Голос */
+micBtn.onclick = () => {
+  if (!("webkitSpeechRecognition" in window)) {
+    respond("Голос не поддерживается 😢");
+    return;
   }
-  input.value = "";
-});
+
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = "ru-RU";
+  recognition.start();
+
+  respond("Я слушаю тебя… 🎧");
+
+  recognition.onresult = (event) => {
+    const text = event.results[0][0].transcript.toLowerCase();
+    respond(answers[text] || "Я пока не знаю, но учусь 💭");
+  };
+};
