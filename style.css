@@ -1,132 +1,106 @@
-/* ====== Общие настройки ====== */
+/* === style.css === */
+
 body {
-  margin: 0;
-  padding: 0;
-  background: radial-gradient(circle at center, #222 0%, #000 100%);
-  height: 100vh;
+  background: #ffeef2;
+  font-family: 'Arial', sans-serif;
   display: flex;
   justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
+  align-items: flex-start;
+  height: 100vh;
+  margin: 0;
+  padding-top: 50px;
 }
 
-/* ====== Робот ====== */
 #robot {
   width: 220px;
-  height: 320px;
-  background: #444;
-  border-radius: 30px;
+  text-align: center;
   position: relative;
-  box-shadow: 0 0 30px rgba(0,0,0,0.7);
-  overflow: visible;
-  transition: transform 0.5s ease; /* плавное движение всего робота */
 }
 
-/* ====== Глаза ====== */
+#face {
+  width: 150px;
+  height: 150px;
+  background: #ffe0e0;
+  border-radius: 50%;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* глаза */
 .eye {
-  width: 22px;
-  height: 22px;
-  background: white;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 50%;
+  border: 2px solid #333;
+  position: absolute;
+  top: 40px;
+}
+.eye.left { left: 35px; }
+.eye.right { right: 35px; }
+
+/* блеск глаз */
+.eye::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: #fff;
   border-radius: 50%;
   position: absolute;
-  top: 70px;
-  transition: all 0.3s ease; /* плавное движение глаз */
+  top: 5px;
+  left: 5px;
 }
-.eye.left { left: 60px; }
-.eye.right { right: 60px; }
 
-/* ====== Руки ====== */
+/* улыбка */
+.smile {
+  width: 70px;
+  height: 40px;
+  border-bottom: 4px solid #333;
+  border-radius: 0 0 50px 50px;
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* руки */
 .arm {
   width: 20px;
-  height: 100px;
-  background: #555;
+  height: 70px;
+  background: #ffe0e0;
   position: absolute;
-  top: 140px;
-  border-radius: 10px;
-  transition: transform 0.5s ease, background 0.3s ease; /* плавный поворот и подсветка */
+  top: 90px;
+  border-radius: 20px;
+  transform-origin: top center;
+  transition: transform 0.3s;
 }
-.arm.left { left: -15px; transform-origin: top right; }
-.arm.right { right: -15px; transform-origin: top left; }
+.arm.left { left: -20px; }
+.arm.right { right: -20px; }
 
-/* ====== Картонка ====== */
+/* картонка */
 #card {
-  position: absolute;
-  top: -130px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-20px);
-  background: #d2b48c;
-  padding: 18px 26px;
-  border-radius: 12px;
-  font-size: 28px;
+  margin-top: 180px;
+  padding: 10px 15px;
+  background: #fff0f5;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  min-height: 40px;
   font-weight: bold;
-  display: none;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-  text-align: center;
-  max-width: 180px;
-  word-wrap: break-word;
-  z-index: 10;
-  opacity: 0;
-  transition: all 0.5s ease; /* плавное появление/исчезновение */
+  transition: all 0.3s;
 }
 
-/* ====== Лицо ====== */
-#face {
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50px;
-  z-index: 5;
-  transition: all 0.5s ease; /* плавная смена эмоций */
-}
-
-/* ====== Сцена ====== */
-#scene {
-  display: none;
-  width: 150px;
-  position: absolute;
-  top: -150px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  transition: all 0.5s ease; /* плавное появление */
-}
-
-/* ====== Кнопка микрофона ====== */
-#listen {
-  position: absolute;
-  bottom: -70px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12px 22px;
-  font-size: 16px;
-  border-radius: 12px;
+/* кнопка */
+#speakBtn {
+  margin-top: 15px;
+  padding: 8px 12px;
+  background: #ffb6c1;
   border: none;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  background: #ffcc00;
-  color: #000;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  transition: all 0.2s ease;
+  transition: background 0.2s;
 }
-#listen:hover {
-  background: #ffdd33;
-  transform: translateX(-50%) scale(1.05);
-}
-
-/* ====== Анимации глаз ====== */
-@keyframes blink {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.1); }
-}
-.eye.blink {
-  animation: blink 0.2s linear;
-}
-
-/* ====== Адаптация под телефоны ====== */
-@media (max-width: 600px) {
-  #robot { width: 160px; height: 240px; }
-  #card { font-size: 22px; padding: 14px 20px; max-width: 140px; }
-  #face { width: 40px; top: 50px; }
-  #scene { width: 120px; top: -120px; }
-  #listen { padding: 10px 18px; font-size: 14px; }
+#speakBtn:hover {
+  background: #ff99aa;
 }
