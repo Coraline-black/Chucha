@@ -1,5 +1,4 @@
-/* === style.css === */
-
+/* Общие стили */
 body {
   background: #ffeef2;
   font-family: 'Arial', sans-serif;
@@ -11,40 +10,44 @@ body {
   padding-top: 50px;
 }
 
+/* Контейнер робота */
 #robot {
   width: 220px;
   text-align: center;
   position: relative;
 }
 
+/* Лицо */
 #face {
   width: 150px;
   height: 150px;
-  background: #ffe0e0;
+  background: #ffdadf;
   border-radius: 50%;
   margin: 0 auto;
   position: relative;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s;
 }
 
-/* глаза */
+/* Глаза */
 .eye {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   background: #fff;
   border-radius: 50%;
   border: 2px solid #333;
   position: absolute;
   top: 40px;
+  transition: all 0.2s;
 }
 .eye.left { left: 35px; }
 .eye.right { right: 35px; }
 
-/* блеск глаз */
+/* Блеск глаз */
 .eye::after {
   content: "";
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background: #fff;
   border-radius: 50%;
   position: absolute;
@@ -52,23 +55,24 @@ body {
   left: 5px;
 }
 
-/* улыбка */
+/* Улыбка */
 .smile {
-  width: 70px;
-  height: 40px;
+  width: 80px;
+  height: 50px;
   border-bottom: 4px solid #333;
   border-radius: 0 0 50px 50px;
   position: absolute;
-  bottom: 30px;
+  bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
+  transition: all 0.3s;
 }
 
-/* руки */
+/* Руки */
 .arm {
   width: 20px;
   height: 70px;
-  background: #ffe0e0;
+  background: #ffdadf;
   position: absolute;
   top: 90px;
   border-radius: 20px;
@@ -78,7 +82,7 @@ body {
 .arm.left { left: -20px; }
 .arm.right { right: -20px; }
 
-/* картонка */
+/* Картонка */
 #card {
   margin-top: 180px;
   padding: 10px 15px;
@@ -90,7 +94,7 @@ body {
   transition: all 0.3s;
 }
 
-/* кнопка */
+/* Кнопка */
 #speakBtn {
   margin-top: 15px;
   padding: 8px 12px;
@@ -103,4 +107,21 @@ body {
 }
 #speakBtn:hover {
   background: #ff99aa;
+}
+
+/* Эмоции лица */
+#face.happy .smile {
+  border-bottom-color: #333;
+  transform: translateX(-50%) rotate(0deg);
+}
+#face.sad .smile {
+  border-bottom-color: #555;
+  transform: translateX(-50%) rotate(180deg);
+}
+#face.surprised .smile {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border-bottom: none;
+  border: 4px solid #333;
 }
