@@ -1,5 +1,5 @@
 body {
-  background: radial-gradient(circle at top, #1b1f3b, #050510);
+  background: radial-gradient(circle at top, #2a0f1f, #07030a);
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
@@ -20,23 +20,23 @@ body {
 #face {
   width: 190px;
   height: 190px;
-  background: #0b1025;
+  background: #140610;
   border-radius: 50% 50% 55% 55%;
   margin: 0 auto;
   position: relative;
-  box-shadow: 0 0 30px rgba(0,170,255,0.25);
+  box-shadow: 0 0 30px rgba(255,160,200,0.25);
 }
 
-/* Глаза */
+/* Глаза — СВЕТЛО-РОЗОВЫЕ */
 .eye {
-  width: 42px;
-  height: 42px;
-  background: radial-gradient(circle, #bfe9ff, #3fa9f5);
+  width: 44px;
+  height: 44px;
+  background: radial-gradient(circle, #ffd6eb, #ff8fc6);
   border-radius: 50%;
   position: absolute;
   top: 55px;
   transition: height 0.15s;
-  box-shadow: 0 0 12px rgba(120,200,255,0.8);
+  box-shadow: 0 0 14px rgba(255,150,200,0.9);
 }
 .eye.left { left: 45px; }
 .eye.right { right: 45px; }
@@ -53,11 +53,11 @@ body {
   left: 7px;
 }
 
-/* Улыбка */
+/* Улыбка — РОЗОВАЯ */
 .smile {
   width: 90px;
   height: 45px;
-  border-bottom: 4px solid #9ad8ff;
+  border-bottom: 4px solid #ff9acb;
   border-radius: 0 0 60px 60px;
   position: absolute;
   bottom: 35px;
@@ -69,7 +69,7 @@ body {
 .arm {
   width: 22px;
   height: 75px;
-  background: #0b1025;
+  background: #140610;
   position: absolute;
   top: 110px;
   border-radius: 20px;
@@ -83,9 +83,9 @@ body {
 #card {
   margin-top: 200px;
   padding: 14px;
-  background: rgba(15,25,60,0.9);
+  background: rgba(40,10,30,0.9);
   border-radius: 16px;
-  box-shadow: 0 0 15px rgba(0,170,255,0.2);
+  box-shadow: 0 0 15px rgba(255,150,200,0.25);
   min-height: 48px;
   font-weight: bold;
 }
@@ -94,7 +94,7 @@ body {
 #micBtn {
   margin-top: 16px;
   padding: 10px 18px;
-  background: linear-gradient(135deg, #3fa9f5, #1c6cff);
+  background: linear-gradient(135deg, #ff9acb, #ff5fa2);
   border: none;
   border-radius: 25px;
   color: white;
