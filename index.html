@@ -1,172 +1,32 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>ИИ Робот</title>
-<style>
-body {
-  background: radial-gradient(circle at top, #2a0f1f, #07030a);
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100vh;
-  margin: 0;
-  padding-top: 40px;
-  color: white;
-}
-
-#robot { width: 260px; text-align: center; position: relative; }
-
-#face {
-  width: 190px; height: 190px; background: #140610;
-  border-radius: 50% 50% 55% 55%; margin: 0 auto;
-  position: relative; box-shadow: 0 0 30px rgba(255,160,200,0.25);
-}
-
-.eye {
-  width: 44px; height: 44px; background: radial-gradient(circle, #ffd6eb, #ff8fc6);
-  border-radius: 50%; position: absolute; top: 55px; transition: height 0.15s;
-  box-shadow: 0 0 14px rgba(255,150,200,0.9);
-}
-.eye.left { left: 45px; }
-.eye.right { right: 45px; }
-.eye::after {
-  content: ""; width: 12px; height: 12px; background: white;
-  border-radius: 50%; position: absolute; top: 6px; left: 7px;
-}
-
-.smile {
-  width: 90px; height: 45px;
-  border-bottom: 4px solid #ff9acb;
-  border-radius: 0 0 60px 60px;
-  position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
-}
-
-.arm {
-  width: 22px; height: 75px; background: #140610;
-  position: absolute; top: 110px; border-radius: 20px;
-  transform-origin: top center; transition: transform 0.3s;
-}
-.arm.left { left: -22px; }
-.arm.right { right: -22px; }
-
-#card {
-  margin-top: 200px; padding: 14px;
-  background: rgba(40,10,30,0.9); border-radius: 16px;
-  box-shadow: 0 0 15px rgba(255,150,200,0.25);
-  min-height: 48px; font-weight: bold;
-}
-
-#micBtn {
-  margin-top: 16px; padding: 10px 18px;
-  background: linear-gradient(135deg, #ff9acb, #ff5fa2);
-  border: none; border-radius: 25px; color: white; font-size: 16px;
-  cursor: pointer;
-}
-#micBtn:hover { opacity: 0.9; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ИИ Робот-Друг</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="robot">
-  <div id="face">
-    <div class="eye left"></div>
-    <div class="eye right"></div>
-    <div class="smile"></div>
+  <div id="robot">
+    <!-- Голова -->
+    <div id="face">
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+      <div class="smile"></div>
+    </div>
+
+    <!-- Руки -->
+    <div class="arm left"></div>
+    <div class="arm right"></div>
+
+    <!-- Табличка -->
+    <div id="card">Нажми микрофон и скажи что-нибудь</div>
+
+    <!-- Кнопка микрофона -->
+    <button id="micBtn">🎤 Говорю</button>
   </div>
-  <div id="card">Нажми микрофон и скажи что-нибудь 🎤</div>
-  <button id="micBtn">🎤 Говорю</button>
-</div>
 
-<script>
-const card = document.getElementById("card");
-const micBtn = document.getElementById("micBtn");
-const eyes = document.querySelectorAll(".eye");
-const leftArm = document.querySelector(".arm.left");
-const rightArm = document.querySelector(".arm.right");
-
-/* Моргание глаз */
-setInterval(() => {
-  eyes.forEach(e => e.style.height = "6px");
-  setTimeout(() => {
-    eyes.forEach(e => e.style.height = "44px");
-  }, 180);
-}, 2500);
-
-/* Жест руками */
-function gesture() {
-  rightArm.style.transform = "rotate(25deg)";
-  leftArm.style.transform = "rotate(-15deg)";
-  setTimeout(() => {
-    rightArm.style.transform = "rotate(0deg)";
-    leftArm.style.transform = "rotate(0deg)";
-  }, 500);
-}
-
-/* Ответ на картонке */
-function respond(text) {
-  card.textContent = text;
-  gesture();
-}
-
-/* Проверка, нужно ли отвечать */
-function shouldRespond(text) {
-  // Примеры ключевых слов: если игрок дал пример или попросил что-то
-  const triggers = ["покажи", "сколько", "вычисли", "пример", "реши"];
-  return triggers.some(word => text.includes(word));
-}
-
-/* 🎤 Голос */
-micBtn.onclick = () => {
-  if (!("webkitSpeechRecognition" in window)) {
-    respond("Голос не поддерживается 😢");
-    return;
-  }
-
-  const recognition = new webkitSpeechRecognition();
-  recognition.lang = "ru-RU";
-  recognition.start();
-  respond("Я слушаю тебя… 🎧");
-
-  recognition.onresult = async (event) => {
-    const text = event.results[0][0].transcript.toLowerCase();
-    
-    if (!shouldRespond(text)) {
-      // Игнорируем, если не нужно отвечать
-      card.textContent = "💭 Пока молчу...";
-      return;
-    }
-
-    respond("Думаю… 💭");
-
-    // Здесь можно подключить ИИ через OpenAI
-    // Ниже пример без ИИ, просто реакция на математический пример
-    // Простой разбор чисел и действий
-    let answer = "";
-    try {
-      // Пробуем вычислить пример в виде "2 + 2"
-      const match = text.match(/(\d+)\s*([+\-*/])\s*(\d+)/);
-      if (match) {
-        const a = parseInt(match[1]);
-        const op = match[2];
-        const b = parseInt(match[3]);
-        switch(op) {
-          case "+": answer = a + b; break;
-          case "-": answer = a - b; break;
-          case "*": answer = a * b; break;
-          case "/": answer = (b!==0)? a/b : "∞"; break;
-        }
-        respond(`Ответ: ${answer}`);
-      } else {
-        respond("Хмм… пока не знаю, но учусь 💭");
-      }
-    } catch(e) {
-      respond("Ошибка при вычислении 💥");
-    }
-  };
-};
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
