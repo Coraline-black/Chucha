@@ -1,3 +1,4 @@
+// == Получаем элементы ==
 const card = document.getElementById("card");
 const micBtn = document.getElementById("micBtn");
 const eyes = document.querySelectorAll(".eye");
@@ -5,13 +6,13 @@ const face = document.getElementById("face");
 const leftArm = document.querySelector(".arm.left");
 const rightArm = document.querySelector(".arm.right");
 
-// Моргание глаз
+// == Глазки моргают ==
 setInterval(() => {
   eyes.forEach(e => e.style.height = "6px");
   setTimeout(() => eyes.forEach(e => e.style.height = "42px"), 180);
 }, 2500);
 
-// Жесты рук и головы
+// == Кивки и жесты ==
 function gesture(yes = true) {
   rightArm.style.transform = "rotate(25deg)";
   leftArm.style.transform = "rotate(-15deg)";
@@ -23,7 +24,7 @@ function gesture(yes = true) {
   }, 500);
 }
 
-// Звонок на твой Worker
+// == Отправить текст на Worker ==
 async function askAI(text) {
   try {
     const response = await fetch("https://still-leaf-6d93.damp-glade-283e.workers.dev", {
@@ -34,11 +35,11 @@ async function askAI(text) {
     const data = await response.json();
     return data.answer;
   } catch {
-    return "Ошибка связи с ИИ 💥";
+    return "Проблема с ИИ. Попробуй чуть позже 💥";
   }
 }
 
-// Показываем ответ
+// == Обработка ответа ==
 async function respond(text) {
   const answer = await askAI(text);
   card.textContent = answer;
@@ -46,7 +47,7 @@ async function respond(text) {
   gesture(low.includes("да") || low.includes("хорошо"));
 }
 
-// Голос
+// == Голос ==
 micBtn.onclick = () => {
   if (!("webkitSpeechRecognition" in window)) {
     card.textContent = "Голос не поддерживается 😢";
@@ -55,7 +56,8 @@ micBtn.onclick = () => {
   const recognition = new webkitSpeechRecognition();
   recognition.lang = "ru-RU";
   recognition.start();
-  card.textContent = "🎧 Я слушаю…";
+  card.textContent = "🎧 Слушаю…";
+
   recognition.onresult = (event) => {
     const text = event.results[0][0].transcript.toLowerCase();
     respond(text);
