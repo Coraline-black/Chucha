@@ -27,13 +27,13 @@ function gesture() {
 // === КИВОК / ОТРИЦАНИЕ ГОЛОВОЙ ===
 function nodHead(isYes) {
   if (isYes) {
-    face.style.transform = "rotate(8deg)";
-    setTimeout(() => face.style.transform = "rotate(-8deg)", 200);
-    setTimeout(() => face.style.transform = "rotate(0deg)", 400);
-  } else {
     face.style.transform = "rotate(15deg)";
-    setTimeout(() => face.style.transform = "rotate(-15deg)", 200);
-    setTimeout(() => face.style.transform = "rotate(0deg)", 400);
+    setTimeout(() => face.style.transform = "rotate(-15deg)", 300);
+    setTimeout(() => face.style.transform = "rotate(0deg)", 600);
+  } else {
+    face.style.transform = "rotate(20deg)";
+    setTimeout(() => face.style.transform = "rotate(-20deg)", 300);
+    setTimeout(() => face.style.transform = "rotate(0deg)", 600);
   }
 }
 
@@ -49,10 +49,13 @@ function shouldRespond(text) {
   return triggers.some(word => text.includes(word));
 }
 
-// === ОТВЕТ ИИ ===
+// === НАСТОЯЩИЙ ИИ ===
 async function askAI(message) {
-  const apiKey = "ТВОЙ_API_KEY_ЗДЕСЬ"; // вставь свой ключ
+  const apiKey = "ТВОЙ_API_KEY_ЗДЕСЬ"; // вставь свой ключ OpenAI
   try {
+    // Сразу показываем "думаю" на табличке
+    respond("💭 Думаю…");
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -62,7 +65,7 @@ async function askAI(message) {
       body: JSON.stringify({
         model: "gpt-4",
         messages: [
-          { role: "system", content: "Ты дружелюбный робот-друг. Отвечай только через табличку и жесты, не говори вслух." },
+          { role: "system", content: "Ты дружелюбный робот-друг. Отвечай через табличку и жесты. Никогда не говори вслух." },
           { role: "user", content: message }
         ]
       })
@@ -91,16 +94,20 @@ micBtn.onclick = () => {
   recognition.onresult = async (event) => {
     const text = event.results[0][0].transcript.toLowerCase();
 
+    // Если не нужно отвечать
     if (!shouldRespond(text)) {
-      nodHead(false); // качаем головой отрицательно
+      nodHead(false); // качает головой отрицательно
       card.textContent = "💭 Я пока молчу…";
       return;
     }
 
-    nodHead(true); // киваем головой
-    respond("Думаю… 💭");
+    nodHead(true); // кивает
+    respond("💭 Думаю…");
 
+    // Получаем ответ от ИИ
     const answer = await askAI(text);
-    setTimeout(() => respond(answer), 600);
+
+    // Показываем на табличке
+    setTimeout(() => respond(answer), 400);
   };
 };
