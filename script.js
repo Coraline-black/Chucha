@@ -26,15 +26,11 @@ rec.onresult = async e => {
   const text = e.results[0][0].transcript.toLowerCase();
   console.log("Услышал:", text);
 
-  // Если есть сервер ИИ, можно использовать:
-  // const answer = await askAI(text);
-  // memorize(text, answer, "happy");
-
-  // Для локальных ответов пока используем мозг
+  // Проверяем локальный мозг
   brain(text);
 };
 
-/* ====== Показ картонок ====== */
+/* ====== Показ картонки ====== */
 function showCard(text, time = 3000) {
   card.innerText = text;
   card.style.display = "block";
@@ -47,7 +43,7 @@ function showCard(text, time = 3000) {
   }, time);
 }
 
-/* ====== Поднимаем руки ====== */
+/* ====== Поднять руки ====== */
 function raiseHands() {
   leftArm.style.transform = "rotate(-60deg)";
   rightArm.style.transform = "rotate(60deg)";
@@ -55,7 +51,7 @@ function raiseHands() {
   rightArm.classList.add("raise");
 }
 
-/* ====== Опускаем руки ====== */
+/* ====== Опустить руки ====== */
 function resetPose() {
   leftArm.style.transform = "rotate(0deg)";
   rightArm.style.transform = "rotate(0deg)";
@@ -97,7 +93,7 @@ function showScene(name, time = 3000) {
 
 /* ====== Локальный мозг робота ====== */
 function brain(text) {
-  // Проверка памяти
+  // Проверяем память
   for (let i = 0; i < memory.length; i++) {
     if (text.includes(memory[i].question)) {
       if(memory[i].scene) showScene(memory[i].scene);
@@ -120,7 +116,7 @@ function brain(text) {
   // Время
   if (text.includes("время")) return memorize(text, new Date().toLocaleTimeString().slice(0,5), emotion);
 
-  // Эмоции и простые слова
+  // Простые слова/эмоции
   if (text.includes("привет")) { emotion="happy"; return memorize(text,"👋",emotion); }
   if (text.includes("люб")) { emotion="happy"; return memorize(text,"💖",emotion); }
   if (text.includes("груст")) { emotion="sad"; return memorize(text,"😔",emotion); }
@@ -130,7 +126,7 @@ function brain(text) {
   if (text.includes("дождь")) { showScene("rain"); emotion="surprised"; return memorize(text,"☔",emotion); }
   if (text.includes("солнце")) { showScene("sun"); emotion="happy"; return memorize(text,"☀️",emotion); }
 
-  // Не понял
+  // Если не понял
   emotion="surprised";
   memorize(text,"❓",emotion);
 }
@@ -142,19 +138,3 @@ function memorize(question, answer, emotion) {
   changeFace(emotion);
   return showCard(answer);
 }
-
-/* ====== Пример функции запроса к ИИ (опционально) ======
-async function askAI(question) {
-  try {
-    const res = await fetch("http://localhost:3000/ask", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({question})
-    });
-    const data = await res.json();
-    return data.answer;
-  } catch {
-    return "Ошибка подключения к ИИ";
-  }
-}
-*/
