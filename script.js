@@ -27,12 +27,10 @@ function gesture() {
 // === КИВОК / ОТРИЦАНИЕ ГОЛОВОЙ ===
 function nodHead(isYes) {
   if (isYes) {
-    // кивок
     face.style.transform = "rotate(8deg)";
     setTimeout(() => face.style.transform = "rotate(-8deg)", 200);
     setTimeout(() => face.style.transform = "rotate(0deg)", 400);
   } else {
-    // отрицание
     face.style.transform = "rotate(15deg)";
     setTimeout(() => face.style.transform = "rotate(-15deg)", 200);
     setTimeout(() => face.style.transform = "rotate(0deg)", 400);
@@ -45,41 +43,36 @@ function respond(text) {
   gesture();
 }
 
-// === НУЖНО ЛИ ОТВЕЧАТЬ ===
+// === ПРОВЕРКА, НУЖНО ЛИ ОТВЕЧАТЬ ===
 function shouldRespond(text) {
-  const triggers = [
-    "сколько", "реши", "пример", "посчитай",
-    "+", "-", "*", "/"
-  ];
+  const triggers = ["покажи", "сколько", "вычисли", "пример", "реши"];
   return triggers.some(word => text.includes(word));
 }
 
-// === ПРОСТОЕ ОБЩЕНИЕ (КАК ДРУГ) ===
-function friendlyTalk(text) {
-  if (text.includes("привет")) return "Привет 🙂 Я рад тебя видеть";
-  if (text.includes("как дела")) return "У меня всё хорошо 💗 А у тебя?";
-  if (text.includes("ты кто")) return "Я твой робот-друг 🤖";
-  if (text.includes("ты милый")) return "Спасибо… мне приятно 💞";
-  if (text.includes("пока")) return "Пока! Я буду здесь 🌟";
-  return null;
-}
-
-// === РЕШЕНИЕ ПРИМЕРОВ ===
-function solveMath(text) {
-  const match = text.match(/(\d+)\s*([+\-*/])\s*(\d+)/);
-  if (!match) return null;
-
-  const a = Number(match[1]);
-  const op = match[2];
-  const b = Number(match[3]);
-
-  switch (op) {
-    case "+": return a + b;
-    case "-": return a - b;
-    case "*": return a * b;
-    case "/": return b !== 0 ? a / b : "∞";
+// === ОТВЕТ ИИ ===
+async function askAI(message) {
+  const apiKey = "ТВОЙ_API_KEY_ЗДЕСЬ"; // вставь свой ключ
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        messages: [
+          { role: "system", content: "Ты дружелюбный робот-друг. Отвечай только через табличку и жесты, не говори вслух." },
+          { role: "user", content: message }
+        ]
+      })
+    });
+    const data = await response.json();
+    return data.choices[0].message.content;
+  } catch (e) {
+    console.error(e);
+    return "Ошибка связи с ИИ 💥";
   }
-  return null;
 }
 
 // === ГОЛОС ===
@@ -93,31 +86,21 @@ micBtn.onclick = () => {
   recognition.lang = "ru-RU";
   recognition.start();
 
-  card.textContent = "🎧 Я слушаю…";
+  respond("🎧 Я слушаю…");
 
-  recognition.onresult = (event) => {
+  recognition.onresult = async (event) => {
     const text = event.results[0][0].transcript.toLowerCase();
 
-    // 1️⃣ Пример
-    if (shouldRespond(text)) {
-      nodHead(true);
-      const result = solveMath(text);
-      if (result !== null) {
-        setTimeout(() => respond(`Ответ: ${result}`), 500);
-        return;
-      }
-    }
-
-    // 2️⃣ Общение
-    const friendAnswer = friendlyTalk(text);
-    if (friendAnswer) {
-      nodHead(true);
-      setTimeout(() => respond(friendAnswer), 500);
+    if (!shouldRespond(text)) {
+      nodHead(false); // качаем головой отрицательно
+      card.textContent = "💭 Я пока молчу…";
       return;
     }
 
-    // 3️⃣ Ничего не делаем
-    nodHead(false);
-    card.textContent = "💭 Я пока просто слушаю";
+    nodHead(true); // киваем головой
+    respond("Думаю… 💭");
+
+    const answer = await askAI(text);
+    setTimeout(() => respond(answer), 600);
   };
 };
