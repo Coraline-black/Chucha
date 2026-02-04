@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Немой умный робот с памятью</title>
+
+<style>
+body {
+  margin: 0;
+  background: radial-gradient(#222, #000);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+/* Робот */
+#robot {
+  width: 220px;
+  height: 320px;
+  background: #444;
+  border-radius: 30px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0,0,0,0.7);
+}
+
+/* Глаза */
+.eye {
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 70px;
+  transition: all 0.3s;
+}
+.eye.left { left: 60px; }
+.eye.right { right: 60px; }
+
+/* Руки */
+.arm {
+  width: 20px;
+  height: 100px;
+  background: #555;
+  position: absolute;
+  top: 140px;
+  border-radius: 10px;
+  transition: transform 0.5s;
+}
+.arm.left { left: -15px; transform-origin: top right; }
+.arm.right { right: -15px; transform-origin: top left; }
+
+/* Картонка */
+#card {
+  position: absolute;
+  top: -130px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #d2b48c;
+  padding: 18px 26px;
+  border-radius: 12px;
+  font-size: 28px;
+  font-weight: bold;
+  display: none;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+  text-align: center;
+  max-width: 180px;
+  word-wrap: break-word;
+}
+
+/* Кнопка */
+#listen {
+  position: absolute;
+  bottom: -70px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 22px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="robot">
+  <div class="eye left"></div>
+  <div class="eye right"></div>
+
+  <div class="arm left"></div>
+  <div class="arm right"></div>
+
+  <div id="card"></div>
+
+  <button id="listen">🎤</button>
+</div>
+
+<script>
+const card = document.getElementById("card");
+const leftArm = document.querySelector(".arm.left");
+const rightArm = document.querySelector(".arm.right");
+const eyes = document.querySelectorAll(".eye");
+
+/* Память робота */
+let memory = JSON.parse(localStorage.getItem("robotMemory") || "[]");
+
+/* СЛУХ */
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+const rec = new SpeechRecognition();
+rec.lang = "ru-RU";
+
+/* КНОПКА */
+document.getElementById("listen").onclick = () => {
+  thinkAnimation();
+  rec.start();
+};
+
+/* РАСПОЗНАВАНИЕ */
+rec.onresult = e => {
+  const text = e.results[0][0].transcript.toLowerCase();
+  console.log("Услышал:", text);
+  brain(text);
+};
+
+/* ВИЗУАЛ */
+function showCard(text, time = 3000) {
+  card.innerText = text;
+  card.style.display = "block";
+  raiseHands();
+  setTimeout(() => {
+    card.style.display = "none";
+    resetPose();
+  }, time);
+}
+
+function raiseHands() {
+  leftArm.style.transform = "rotate(-60deg)";
+  rightArm.style.transform = "rotate(60deg)";
+}
+
+function resetPose() {
+  leftArm.style.transform = "rotate(0deg)";
+  rightArm.style.transform = "rotate(0deg)";
+}
+
+function thinkAnimation() {
+  eyes.forEach(e => e.style.transform = "scale(0.6)");
+  setTimeout(() => {
+    eyes.forEach(e => e.style.transform = "scale(1)");
+  }, 800);
+}
+
+/* МОЗГ */
+function brain(text) {
+
+  // Проверяем память
+  for (let i = 0; i < memory.length; i++) {
+    if (text.includes(memory[i].question)) {
+      return showCard(memory[i].answer);
+    }
+  }
+
+  // МАТЕМАТИКА
+  if (text.match(/\d+/g)) {
+    let nums = text.match(/\d+/g).map(Number);
+    if (text.includes("плюс")) return memorize(text, nums[0] + nums[1]);
+    if (text.includes("минус")) return memorize(text, nums[0] - nums[1]);
+    if (text.includes("умнож")) return memorize(text, nums[0] * nums[1]);
+    if (text.includes("дел")) return memorize(text, nums[0] / nums[1]);
+  }
+
+  // ВРЕМЯ
+  if (text.includes("время")) {
+    let t = new Date().toLocaleTimeString().slice(0,5);
+    return memorize(text, t);
+  }
+
+  // ЭМОЦИИ
+  if (text.includes("привет")) return memorize(text, "👋");
+  if (text.includes("люб")) return memorize(text, "💖");
+  if (text.includes("груст")) return memorize(text, "😔");
+  if (text.includes("счаст")) return memorize(text, "😊");
+
+  // ВОПРОСЫ О СМЫСЛЕ
+  if (text.includes("что такое")) return memorize(text, "💡");
+
+  // ЕСЛИ НЕ ПОНЯЛ
+  memorize(text, "❓");
+}
+
+/* Функция добавления в память */
+function memorize(question, answer) {
+  memory.push({question, answer});
+  localStorage.setItem("robotMemory", JSON.stringify(memory));
+  return showCard(answer);
+}
+</script>
+
+</body>
+</html>
